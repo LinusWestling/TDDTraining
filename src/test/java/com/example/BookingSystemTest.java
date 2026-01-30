@@ -246,4 +246,16 @@ public class BookingSystemTest {
         verify(roomRepository, times(1)).save(room);
         verify(notificationService, times(1)).sendCancellationConfirmation(booking);
     }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when booking id is null")
+    void cancelBooking_ThrowsIllegalArgumentException_WhenBookingIdIsNull() {
+        // When/Then
+        assertThatThrownBy(() -> bookingSystem.cancelBooking(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Boknings-id kan inte vara null");
+
+        verifyNoInteractions(roomRepository);
+        verifyNoInteractions(notificationService);
+    }
 }
