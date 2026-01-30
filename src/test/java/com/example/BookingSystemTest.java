@@ -148,4 +148,26 @@ public class BookingSystemTest {
         verify(roomRepository, never()).save(any(Room.class));
         verifyNoInteractions(notificationService);
     }
+
+    @Test
+    @DisplayName("Should return true when notification service fails")
+    void bookRoom_ReturnsTrue_WhenNotificationServiceFails() throws NotificationException {
+        // Given
+        String roomId = "room1";
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.plusHours(1);
+        LocalDateTime endTime = now.plusHours(2);
+        Room room = new Room(roomId, "Test Room");
+
+        when(timeProvider.getCurrentTime()).thenReturn(now);
+        when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
+        doThrow(new NotificationException("Failed to send notification")).when(notificationService).sendBookingConfirmation(any(Booking.class));
+
+        // When
+        boolean result = bookingSystem.bookRoom(roomId, startTime, endTime);
+
+        // Then
+        assertThat(result).isTrue();
+        verify(roomRepository, times(1)).save(room);
+    }
 }
