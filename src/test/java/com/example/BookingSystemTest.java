@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -169,5 +170,29 @@ public class BookingSystemTest {
         // Then
         assertThat(result).isTrue();
         verify(roomRepository, times(1)).save(room);
+    }
+
+    @Test
+    @DisplayName("Should return only available rooms")
+    void getAvailableRooms_ReturnsOnlyAvailableRooms() {
+        // Given
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.plusHours(1);
+        LocalDateTime endTime = now.plusHours(2);
+
+        Room room1 = new Room("room1", "Room 1");
+        Room room2 = new Room("room2", "Room 2");
+        room2.addBooking(new Booking("booking1", "room2", startTime, endTime)); // room2 is booked
+        Room room3 = new Room("room3", "Room 3");
+
+        List<Room> allRooms = List.of(room1, room2, room3);
+
+        when(roomRepository.findAll()).thenReturn(allRooms);
+
+        // When
+        List<Room> availableRooms = bookingSystem.getAvailableRooms(startTime, endTime);
+
+        // Then
+        assertThat(availableRooms).containsExactlyInAnyOrder(room1, room3);
     }
 }
