@@ -274,4 +274,30 @@ public class BookingSystemTest {
         verify(roomRepository, never()).save(any(Room.class));
         verifyNoInteractions(notificationService);
     }
+
+    @Test
+    @DisplayName("Should throw IllegalStateException when booking has already started")
+    void cancelBooking_ThrowsIllegalStateException_WhenBookingHasStarted() {
+        // Given
+        String roomId = "room1";
+        String bookingId = "booking1";
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.minusHours(1); // Booking started an hour ago
+        LocalDateTime endTime = now.plusHours(1);
+
+        Room room = new Room(roomId, "Test Room");
+        Booking booking = new Booking(bookingId, roomId, startTime, endTime);
+        room.addBooking(booking);
+
+        when(timeProvider.getCurrentTime()).thenReturn(now);
+        when(roomRepository.findAll()).thenReturn(List.of(room));
+
+        // When/Then
+        assertThatThrownBy(() -> bookingSystem.cancelBooking(bookingId))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Kan inte avboka påbörjad eller avslutad bokning");
+
+        verify(roomRepository, never()).save(any(Room.class));
+        verifyNoInteractions(notificationService);
+    }
 }
