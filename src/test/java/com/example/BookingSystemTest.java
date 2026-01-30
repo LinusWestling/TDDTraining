@@ -102,4 +102,25 @@ public class BookingSystemTest {
                 Arguments.of("room1", futureTime.plusHours(1), futureTime, "Sluttid måste vara efter starttid")
         );
     }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when room is not found")
+    void bookRoom_ThrowsIllegalArgumentException_WhenRoomNotFound() {
+        // Given
+        String roomId = "nonExistentRoom";
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.plusHours(1);
+        LocalDateTime endTime = now.plusHours(2);
+
+        when(timeProvider.getCurrentTime()).thenReturn(now);
+        when(roomRepository.findById(roomId)).thenReturn(Optional.empty());
+
+        // When/Then
+        assertThatThrownBy(() -> bookingSystem.bookRoom(roomId, startTime, endTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Rummet existerar inte");
+
+        verify(roomRepository, never()).save(any(Room.class));
+        verifyNoInteractions(notificationService);
+    }
 }
