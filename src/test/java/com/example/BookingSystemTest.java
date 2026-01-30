@@ -123,4 +123,29 @@ public class BookingSystemTest {
         verify(roomRepository, never()).save(any(Room.class));
         verifyNoInteractions(notificationService);
     }
+
+    @Test
+    @DisplayName("Should return false when room is not available")
+    void bookRoom_ReturnsFalse_WhenRoomIsNotAvailable() {
+        // Given
+        String roomId = "room1";
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.plusHours(1);
+        LocalDateTime endTime = now.plusHours(2);
+
+        Room room = new Room(roomId, "Test Room");
+        Booking existingBooking = new Booking("booking1", roomId, startTime, endTime);
+        room.addBooking(existingBooking);
+
+        when(timeProvider.getCurrentTime()).thenReturn(now);
+        when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
+
+        // When
+        boolean result = bookingSystem.bookRoom(roomId, startTime, endTime);
+
+        // Then
+        assertThat(result).isFalse();
+        verify(roomRepository, never()).save(any(Room.class));
+        verifyNoInteractions(notificationService);
+    }
 }
