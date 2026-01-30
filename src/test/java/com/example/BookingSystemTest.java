@@ -195,4 +195,28 @@ public class BookingSystemTest {
         // Then
         assertThat(availableRooms).containsExactlyInAnyOrder(room1, room3);
     }
+
+    @ParameterizedTest
+    @DisplayName("Should throw IllegalArgumentException for invalid getAvailableRooms arguments")
+    @MethodSource("invalidGetAvailableRoomsArguments")
+    void getAvailableRooms_ThrowsIllegalArgumentException_WhenArgumentsAreInvalid(
+            LocalDateTime startTime, LocalDateTime endTime, String expectedMessage) {
+        // When/Then
+        assertThatThrownBy(() -> bookingSystem.getAvailableRooms(startTime, endTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(expectedMessage);
+
+        verifyNoInteractions(roomRepository);
+    }
+
+    private static Stream<Arguments> invalidGetAvailableRoomsArguments() {
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime futureTime = now.plusHours(1);
+
+        return Stream.of(
+                Arguments.of(null, futureTime, "Måste ange både start- och sluttid"),
+                Arguments.of(futureTime, null, "Måste ange både start- och sluttid"),
+                Arguments.of(futureTime.plusHours(1), futureTime, "Sluttid måste vara efter starttid")
+        );
+    }
 }
