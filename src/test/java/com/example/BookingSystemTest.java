@@ -258,4 +258,20 @@ public class BookingSystemTest {
         verifyNoInteractions(roomRepository);
         verifyNoInteractions(notificationService);
     }
+
+    @Test
+    @DisplayName("Should return false when booking is not found")
+    void cancelBooking_ReturnsFalse_WhenBookingNotFound() {
+        // Given
+        String bookingId = "nonExistentBooking";
+        when(roomRepository.findAll()).thenReturn(List.of());
+
+        // When
+        boolean result = bookingSystem.cancelBooking(bookingId);
+
+        // Then
+        assertThat(result).isFalse();
+        verify(roomRepository, never()).save(any(Room.class));
+        verifyNoInteractions(notificationService);
+    }
 }
