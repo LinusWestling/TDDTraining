@@ -219,4 +219,31 @@ public class BookingSystemTest {
                 Arguments.of(futureTime.plusHours(1), futureTime, "Sluttid måste vara efter starttid")
         );
     }
+
+    @Test
+    @DisplayName("Should successfully cancel a booking")
+    void cancelBooking_Success() throws NotificationException {
+        // Given
+        String roomId = "room1";
+        String bookingId = "booking1";
+        LocalDateTime now = LocalDateTime.of(2025, 1, 30, 10, 0);
+        LocalDateTime startTime = now.plusHours(1);
+        LocalDateTime endTime = now.plusHours(2);
+
+        Room room = new Room(roomId, "Test Room");
+        Booking booking = new Booking(bookingId, roomId, startTime, endTime);
+        room.addBooking(booking);
+
+        when(timeProvider.getCurrentTime()).thenReturn(now);
+        when(roomRepository.findAll()).thenReturn(List.of(room));
+
+        // When
+        boolean result = bookingSystem.cancelBooking(bookingId);
+
+        // Then
+        assertThat(result).isTrue();
+        assertThat(room.hasBooking(bookingId)).isFalse();
+        verify(roomRepository, times(1)).save(room);
+        verify(notificationService, times(1)).sendCancellationConfirmation(booking);
+    }
 }
