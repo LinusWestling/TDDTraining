@@ -1,23 +1,33 @@
 package com.example.payment;
 
+import com.example.payment.interfaces.NotificationService;
+import com.example.payment.interfaces.PaymentApiClient;
+import com.example.payment.interfaces.PaymentRepository;
+
 public class PaymentProcessor {
-    private static final String API_KEY = "sk_test_123456";
+
+    private final PaymentApiClient paymentApiClient;
+    private final PaymentRepository paymentRepository;
+    private final NotificationService notificationService;
+
+    // Dependency injection
+    public PaymentProcessor(PaymentApiClient paymentApiClient,
+                            PaymentRepository paymentRepository,
+                            NotificationService notificationService) {
+        this.paymentApiClient = paymentApiClient;
+        this.paymentRepository = paymentRepository;
+        this.notificationService = notificationService;
+    }
 
     public boolean processPayment(double amount) {
-        // Anropar extern betaltjänst direkt med statisk API-nyckel
-        PaymentApiResponse response = PaymentApi.charge(API_KEY, amount);
 
-        // Skriver till databas direkt
-        if (response.isSuccess()) {
-            DatabaseConnection.getInstance()
-                    .executeUpdate("INSERT INTO payments (amount, status) VALUES (" + amount + ", 'SUCCESS')");
+        boolean success = paymentApiClient.charge(amount);
+
+        if(success) {
+            paymentRepository.savePayment(amount);
+            notificationService.notifyCustomer(amount);
         }
 
-        // Skickar e-post direkt
-        if (response.isSuccess()) {
-            EmailService.sendPaymentConfirmation("user@example.com", amount);
-        }
-
-        return response.isSuccess();
+        return success;
     }
 }
