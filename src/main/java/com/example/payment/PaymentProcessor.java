@@ -6,6 +6,7 @@ import com.example.payment.interfaces.PaymentRepository;
 
 public class PaymentProcessor {
 
+    // Interfaces, not classes
     private final PaymentApiClient paymentApiClient;
     private final PaymentRepository paymentRepository;
     private final NotificationService notificationService;
