@@ -10,7 +10,7 @@ public class NotifyCustomer implements NotificationService {
 
     @Override
     public void notifyCustomer(double amount){
-        EmailService.sendPaymentConfirmation("user@example.com", amount);
+        // EmailService.sendPaymentConfirmation("user@example.com", amount);
     }
 
 }

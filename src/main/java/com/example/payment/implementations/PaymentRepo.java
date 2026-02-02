@@ -10,8 +10,8 @@ public class PaymentRepo implements PaymentRepository {
 
     public void savePayment(double amount) {
 
-         DatabaseConnection.getInstance()
-                .executeUpdate("INSER INTO payments (amount, status) VALUES (" + amount + ", 'SUCCESS')");
+        // DatabaseConnection.getInstance()
+        //        .executeUpdate("INSER INTO payments (amount, status) VALUES (" + amount + ", 'SUCCESS')");
 
     }
 }
