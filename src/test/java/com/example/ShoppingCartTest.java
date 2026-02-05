@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ShoppingCartTest {
 
@@ -70,5 +71,11 @@ public class ShoppingCartTest {
         cart.addProduct(pineapple, 0);
         assertEquals(0, cart.getTotalQuantity());
         assertEquals(0.0, cart.getTotalCost());
+    }
+
+    @Test
+    void addingProductWithNegativeQuantityThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                ()-> cart.addProduct(pineapple, -2));
     }
 }

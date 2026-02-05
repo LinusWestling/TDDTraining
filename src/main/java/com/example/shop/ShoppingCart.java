@@ -10,6 +10,9 @@ public class ShoppingCart {
 
     // Add products
     public void addProduct(Product product, int quantity) {
+        if (quantity < 0.0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
         items.put(product, quantity);
     }
 
