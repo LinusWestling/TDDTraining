@@ -78,4 +78,10 @@ public class ShoppingCartTest {
         assertThrows(IllegalArgumentException.class,
                 ()-> cart.addProduct(pineapple, -2));
     }
+
+    @Test
+    void removingProductNotInCartDoesNothing() {
+        cart.removeProduct(orange);
+        assertEquals(0, cart.getTotalQuantity());
+    }
 }
