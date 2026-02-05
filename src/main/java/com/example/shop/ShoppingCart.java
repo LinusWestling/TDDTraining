@@ -29,5 +29,7 @@ public class ShoppingCart {
 
 
     // Update quantity
-
+    public void updateQuantity(Product product, int quantity) {
+        items.put(product, quantity);
+    }
 }
