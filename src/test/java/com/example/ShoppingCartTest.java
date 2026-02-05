@@ -63,4 +63,12 @@ public class ShoppingCartTest {
         cart.updateQuantity(orange, 10);
         assertEquals(10, cart.getTotalQuantity());
     }
+
+    // Edge cases
+    @Test
+    void addingProductWithZeroQuantityDoesNotUpdateCart() {
+        cart.addProduct(pineapple, 0);
+        assertEquals(0, cart.getTotalQuantity());
+        assertEquals(0.0, cart.getTotalCost());
+    }
 }
