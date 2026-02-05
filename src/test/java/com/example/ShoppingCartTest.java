@@ -30,6 +30,12 @@ public class ShoppingCartTest {
 
 
     // Remove products
+    @Test
+    void removingProductMakesItDisappear() {
+        cart.addProduct(orange, 2);
+        cart.removeProduct(orange);
+        assertEquals(0, cart.getTotalQuantity());
+    }
 
 
     // Caluclate total cost
@@ -39,4 +45,10 @@ public class ShoppingCartTest {
 
 
     // Update quantity
+    @Test
+    void updatingQuantityChangesTheAmount() {
+        cart.addProduct(orange, 3);
+        cart.updateQuantity(orange, 10);
+        assertEquals(10, cart.getTotalQuantity());
+    }
 }

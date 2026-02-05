@@ -16,8 +16,10 @@ public class ShoppingCart {
         return items.values().stream().mapToInt(i -> i).sum();
     }
 
-
     // Remove products
+    public void removeProduct(Product product) {
+        items.remove(product);
+    }
 
 
     // Caluclate total cost
@@ -27,4 +29,5 @@ public class ShoppingCart {
 
 
     // Update quantity
+
 }
