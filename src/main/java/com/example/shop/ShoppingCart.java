@@ -23,6 +23,11 @@ public class ShoppingCart {
 
 
     // Caluclate total cost
+    public double getTotalCost() {
+        return items.entrySet().stream()
+                .mapToDouble(e -> e.getKey().getPrice() * e.getValue())
+                .sum();
+    }
 
 
     // Apply discounts

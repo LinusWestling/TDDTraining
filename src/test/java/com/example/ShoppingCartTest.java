@@ -38,7 +38,13 @@ public class ShoppingCartTest {
     }
 
 
-    // Caluclate total cost
+    // Calculate total cost
+    @Test
+    void totalCostIsCalcualtedCorrectly() {
+        cart.addProduct(orange, 2); //16
+        cart.addProduct(pineapple, 4); //60
+        assertEquals(76.0, cart.getTotalCost());
+    }
 
 
     // Apply discounts
