@@ -3,6 +3,9 @@ package com.example;
 import com.example.shop.Product;
 import com.example.shop.ShoppingCart;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShoppingCartTest {
 
@@ -19,7 +22,11 @@ public class ShoppingCartTest {
 
 
     // Add products
-
+    @Test
+    void addingProductIncreasesCartSize() {
+        cart.addProduct(orange, 1);
+        assertEquals(1, cart.getTotalQuantity());
+    }
 
 
     // Remove products
