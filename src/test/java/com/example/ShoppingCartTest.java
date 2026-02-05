@@ -84,4 +84,12 @@ public class ShoppingCartTest {
         cart.removeProduct(orange);
         assertEquals(0, cart.getTotalQuantity());
     }
+
+    @Test
+    void zeroDiscountDoesNotChangeTotalCost() {
+        cart.addProduct(orange, 2); // 20
+        cart.applyDiscount(0.0);
+        assertEquals(16.0, cart.getTotalCost());
+    }
 }
+
