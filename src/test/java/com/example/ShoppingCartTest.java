@@ -48,6 +48,12 @@ public class ShoppingCartTest {
 
 
     // Apply discounts
+    @Test
+    void discountIsAppliedToTotalCost() {
+        cart.addProduct(orange, 2); //16
+        cart.applyDiscount(0.50);
+        assertEquals(8.0, cart.getTotalCost());
+    }
 
 
     // Update quantity

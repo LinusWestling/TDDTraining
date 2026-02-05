@@ -6,6 +6,7 @@ import java.util.Map;
 public class ShoppingCart {
 
     private Map<Product, Integer> items = new HashMap<>();
+    private double discount = 0.0;
 
     // Add products
     public void addProduct(Product product, int quantity) {
@@ -24,13 +25,17 @@ public class ShoppingCart {
 
     // Caluclate total cost
     public double getTotalCost() {
-        return items.entrySet().stream()
+        double total = items.entrySet().stream()
                 .mapToDouble(e -> e.getKey().getPrice() * e.getValue())
                 .sum();
+        return total * (1 - discount);
     }
 
 
     // Apply discounts
+    public void applyDiscount(double percentage) {
+        this.discount = percentage;
+    }
 
 
     // Update quantity
